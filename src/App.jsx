@@ -685,6 +685,7 @@ function MarkdownText({ text }) {
 function AiDecisionAnalysis({
   current, offer, currentCalc, offerCalc,
   recoveryAnalysis, currentCityId, offerCityId,
+  offerProspectNote,
   onNoApiKey,
 }) {
   const [streamingText, setStreamingText] = useState('')
@@ -718,6 +719,7 @@ function AiDecisionAnalysis({
           currentCalc,
           offerCalc,
           recoveryAnalysis,
+          offerProspectNote,
         },
         (partialText) => setStreamingText(partialText),
       )
@@ -810,6 +812,7 @@ export default function App() {
   const [offer, setOffer] = useState(DEFAULT_OFFER)
   const [currentCityId, setCurrentCityId] = useState('')
   const [offerCityId, setOfferCityId] = useState('')
+  const [offerProspectNote, setOfferProspectNote] = useState('')
   const [showSettings, setShowSettings] = useState(false)
   const settingsRef = useRef(null)
 
@@ -858,6 +861,7 @@ export default function App() {
     setOffer(DEFAULT_OFFER)
     setCurrentCityId('')
     setOfferCityId('')
+    setOfferProspectNote('')
   }
 
   const hasApiKey = Boolean(getStoredApiKey())
@@ -1025,6 +1029,23 @@ export default function App() {
               <InputField label="一次性迁移成本" value={offer.migrationCost} onChange={updateOffer('migrationCost')} unit="元" min={0} hint="搬家/违约金/中介等" />
               <InputField label="一次性入职补贴" value={offer.onboardingBonus} onChange={updateOffer('onboardingBonus')} unit="元" min={0} hint="签字费/安家费等" />
             </div>
+            <div className="pt-2">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                <span className="bg-violet-50 text-violet-500 px-1.5 py-0.5 rounded text-xs">主观评估</span>
+                {' '}岗位上升空间
+                <span className="text-gray-300 font-normal normal-case ml-1">（选填）</span>
+              </p>
+              <textarea
+                value={offerProspectNote}
+                onChange={(e) => setOfferProspectNote(e.target.value)}
+                rows={4}
+                placeholder="例如：与 HR / 业务主管聊完，感觉该岗位负责核心项目，团队氛围不错，且未来 1-2 年有明确的晋升空间..."
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-700 bg-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-300 transition-all resize-none leading-relaxed"
+              />
+              <p className="mt-1.5 text-xs text-gray-400 leading-relaxed">
+                AI 将结合此段主观描述与薪资数据，综合判断是否值得接受 Offer。
+              </p>
+            </div>
           </div>
         </div>
 
@@ -1182,6 +1203,7 @@ export default function App() {
           recoveryAnalysis={recoveryAnalysis}
           currentCityId={currentCityId}
           offerCityId={offerCityId}
+          offerProspectNote={offerProspectNote}
           onNoApiKey={handleNoApiKey}
         />
 
